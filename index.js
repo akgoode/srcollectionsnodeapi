@@ -13,7 +13,6 @@ if(!config.get('jwtPrivateKey')) {
     debug('FATAL ERROR: jwtPrivateKey is not defined.');
     process.exit(1);
 }
-app.use(helmet());
 
 const port = process.env.PORT || 4741;
 
@@ -21,7 +20,7 @@ mongoose.connect('mongodb://localhost/srcollections-development')
     .then(() => debug('connected to mongodb...'))
     .catch(err => console.log('Could not connect to mongo db', err));
 
-
+app.use(helmet());
 app.use(express.json( { type: 'application/json' }));
 app.use(express.urlencoded({ extended: false }));
 

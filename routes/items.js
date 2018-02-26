@@ -1,9 +1,12 @@
+const auth = require('../middleware/auth');
 const debug = require('debug')('app:item');
 const { Item, validate } = require('../models/item');
 const express = require('express');
 const router = express.Router();
 
-router.post('/', async function (req, res){
+router.post('/', auth, async function (req, res){
+
+    const token = req.header('x-auth-token');
     const { error } = validate(req.body);
     if (error) return res.status(400).send(JSON.stringify(error.details, 2, 2));
 
@@ -25,10 +28,10 @@ router.get('/:id', async (req, res) => {
     debug(`Got item ${req.params.id}`);
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
     const { error } = validate(req.body);
     if(error) return res.status(400).send(error.details[0].message);
-    
+
     const item = await Item.findById(req.params.id);
     item.set(req.body);
     let result = await item.save();
@@ -36,7 +39,7 @@ router.put('/:id', async (req, res) => {
     debug(`Updated Item ${req.params.id}`);
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     const item = await Item.findByIdAndRemove(req.params.id);
     res.send(item);
     debug(`Deleted item ${req.params.id}`);
