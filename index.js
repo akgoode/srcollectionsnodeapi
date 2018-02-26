@@ -1,4 +1,5 @@
-const startupDebugger = require('debug')('app:startup');
+const config = require('config');
+const debug = require('debug')('app:startup');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const express = require('express');
@@ -8,12 +9,16 @@ const users = require('./routes/users');
 const auth = require('./routes/auth');
 const app = express();
 
+if(!config.get('jwtPrivateKey')) {
+    debug('FATAL ERROR: jwtPrivateKey is not defined.');
+    process.exit(1);
+}
 app.use(helmet());
 
 const port = process.env.PORT || 4741;
 
 mongoose.connect('mongodb://localhost/srcollections-development')
-    .then(() => startupDebugger('connected to mongodb...'))
+    .then(() => debug('connected to mongodb...'))
     .catch(err => console.log('Could not connect to mongo db', err));
 
 
@@ -26,5 +31,5 @@ app.use('/api/auth', auth);
 
 
 app.listen(port, () => {
-    startupDebugger(`Listening on port ${port}...`);
+    debug(`Listening on port ${port}...`);
 });
