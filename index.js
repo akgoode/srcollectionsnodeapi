@@ -5,6 +5,7 @@ const express = require('express');
 const helmet = require('helmet');
 const items = require('./routes/items');
 const users = require('./routes/users');
+const auth = require('./routes/auth');
 const app = express();
 
 app.use(helmet());
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/api/users', users);
 app.use('/api/items', items);
+app.use('/api/auth', auth);
 
 
 app.listen(port, () => {
