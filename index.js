@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const helmet = require('helmet');
 const items = require('./routes/items');
+const users = require('./routes/users');
 const app = express();
 
 app.use(helmet());
@@ -18,7 +19,7 @@ mongoose.connect('mongodb://localhost/srcollections-development')
 app.use(express.json( { type: 'application/json' }));
 app.use(express.urlencoded({ extended: false }));
 
-
+app.use('/api/users', users);
 app.use('/api/items', items);
 
 
