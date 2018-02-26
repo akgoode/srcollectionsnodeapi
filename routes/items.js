@@ -1,10 +1,11 @@
 const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 const debug = require('debug')('app:item');
 const { Item, validate } = require('../models/item');
 const express = require('express');
 const router = express.Router();
 
-router.post('/', auth, async function (req, res){
+router.post('/', [ auth, admin ], async function (req, res){
 
     const token = req.header('x-auth-token');
     const { error } = validate(req.body);
@@ -28,7 +29,7 @@ router.get('/:id', async (req, res) => {
     debug(`Got item ${req.params.id}`);
 });
 
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', [ auth, admin ], async (req, res) => {
     const { error } = validate(req.body);
     if(error) return res.status(400).send(error.details[0].message);
 
@@ -39,7 +40,7 @@ router.put('/:id', auth, async (req, res) => {
     debug(`Updated Item ${req.params.id}`);
 });
 
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', [ auth, admin ], async (req, res) => {
     const item = await Item.findByIdAndRemove(req.params.id);
     res.send(item);
     debug(`Deleted item ${req.params.id}`);
