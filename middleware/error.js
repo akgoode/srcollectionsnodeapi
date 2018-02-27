@@ -1,6 +1,6 @@
-const debug = require('debug')('app:server');
+const winston = require('winston');
 
 module.exports = (err, req, res, next) => {
-    debug(err);
+    winston.error(err.message, err);
     res.status(500).send('Internal server error');
 }
