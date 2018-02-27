@@ -1,3 +1,4 @@
+const error = require('./middleware/error');
 const config = require('config');
 const debug = require('debug')('app:startup');
 const bodyParser = require('body-parser');
@@ -28,6 +29,7 @@ app.use('/api/users', users);
 app.use('/api/items', items);
 app.use('/api/auth', auth);
 
+app.use(error);
 
 app.listen(port, () => {
     debug(`Listening on port ${port}...`);
